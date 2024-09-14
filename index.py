@@ -162,24 +162,4 @@ def get_data_by_room(room_id: str):
 
   return jsonify(result), 200
 
-# accesstoken 테스트용 (삭제 예정)
-@app.route('/accesstoken', methods=['GET'])
-def get_access_token_info():
-  """현재 Access Token과 남은 시간 반환"""
-  global access_token, token_issued_at
-  if access_token and token_issued_at:
-    now = datetime.datetime.utcnow()
-    elapsed_time = (now - token_issued_at).total_seconds()
-    remaining_time = token_lifetime - elapsed_time
-    if remaining_time < 0:
-      remaining_time = 0
-    return jsonify({
-      "access_token": access_token,
-      "remaining_time": remaining_time
-    }), 200
-  else:
-    return jsonify({"error": "Access token이 설정되지 않았거나 발급 시간이 없습니다."}), 400
 
-
-if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=9000, debug=True)
