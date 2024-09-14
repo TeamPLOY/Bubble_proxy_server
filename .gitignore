@@ -1,5 +1,5 @@
 .env
 request_body.txt
-venv
-myenv
-__pycache__
+./venv
+./myenv
+./__pycache__
