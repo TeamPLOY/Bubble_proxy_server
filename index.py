@@ -21,7 +21,11 @@ washtower = {
   '세탁기': 'B31 세탁기3',
   '세탁기1': 'B31 세탁기4',
   '세탁기2': 'B32 세탁기3',
-  '세탁기3': 'B32 세탁기4'
+  '세탁기3': 'B32 세탁기4',
+  '세탁기4': 'B41 세탁기3',
+  '세탁기5': 'B41 세탁기4',
+  '세탁기6': 'B42 세탁기3',
+  '세탁기7': 'B42 세탁기4'
 }
 
 if api_url is None:
@@ -176,3 +180,6 @@ def get_access_token_info():
   else:
     return jsonify({"error": "Access token이 설정되지 않았거나 발급 시간이 없습니다."}), 400
 
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0', port=9000, debug=True)
