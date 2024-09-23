@@ -1,11 +1,11 @@
 #index.py
 from flask import Flask, jsonify
-import requests # type: ignore
+import requests  # type: ignore
 import os
-from dotenv import load_dotenv # type: ignore
+from dotenv import load_dotenv  # type: ignore
 import logging
 import datetime
-from token_service import get_access_token 
+from token_service import get_access_token
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
@@ -59,7 +59,6 @@ def get_headers() -> dict:
     "x-thinq-app-os": "IOS"
   }
 
-
 def refresh_access_token():
   """새로운 accesstoken 발급"""
   global access_token, token_issued_at
@@ -70,7 +69,6 @@ def refresh_access_token():
     logging.info("Access token 발급 성공")
   else:
     logging.error("Access token 발급 실패")
-
 
 def ensure_valid_token():
   """Access Token이 유효한지 확인"""
@@ -104,8 +102,7 @@ def make_request(headers: dict) -> tuple[dict, int]:
     logging.error(f"오류 발생: {e}")
     return {"error": str(e)}, 500
 
-
-def process_device_info(device: dict, result: list) -> None:
+def process_device_all_info(device: dict, result: list) -> None:
   """세탁기 정보를 리스트에 추가"""
   alias = device.get("alias")
   washer_dryer_info = device.get("snapshot", {}).get("washerDryer", {})
@@ -117,6 +114,23 @@ def process_device_info(device: dict, result: list) -> None:
   if remain_time is not None:
     result.append({
       "name": alias,
+      "time": remain_time
+    })
+
+def process_device_info(device: dict, result: list, room_id: str) -> None:
+  """세탁기 정보를 리스트에 추가"""
+  alias = device.get("alias")
+  washer_dryer_info = device.get("snapshot", {}).get("washerDryer", {})
+  remain_time = washer_dryer_info.get("remainTimeMinute")
+
+  if alias in washtower:
+    alias = washtower[alias]
+    
+  clean_alias = alias.replace(room_id, '').strip()
+
+  if room_id in alias and remain_time is not None:
+    result.append({
+      "name": clean_alias,
       "time": remain_time
     })
 
@@ -134,7 +148,7 @@ def get_all_data():
   result = []
 
   for device in devices:
-    process_device_info(device, result)
+    process_device_all_info(device, result)
 
   return jsonify(result), 200
 
@@ -152,14 +166,9 @@ def get_data_by_room(room_id: str):
   result = []
 
   for device in devices:
-    alias = device.get("alias")
-
-    if 'A' not in alias and 'B' not in alias:
-      alias = washtower.get(alias, alias)
-
-    if room_id in alias:
-      process_device_info(device, result)
-
+    process_device_info(device, result, room_id)
+    
+  sort_order = ["건조기1", "건조기2", "세탁기1", "세탁기2", "세탁기3", "세탁기4"]
+  result.sort(key=lambda x: sort_order.index(x["name"]) if x["name"] in sort_order else len(sort_order))
+  
   return jsonify(result), 200
-
-
