@@ -1,8 +1,7 @@
-#index.py
-from flask import Flask, jsonify
+from flask import Flask, jsonify # type: ignore
 import requests  # type: ignore
 import os
-from dotenv import load_dotenv  # type: ignore
+from dotenv import load_dotenv# type: ignore
 import logging
 import datetime
 from token_service import get_access_token
