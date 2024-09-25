@@ -167,7 +167,7 @@ def get_data_by_room(room_id: str):
   for device in devices:
     process_device_info(device, result, room_id)
     
-  sort_order = ["건조기1", "건조기2", "세탁기1", "세탁기2", "세탁기3", "세탁기4"]
+  sort_order = ["세탁기1", "세탁기2", "세탁기3", "세탁기4", "건조기1", "건조기2"]
   result.sort(key=lambda x: sort_order.index(x["name"]) if x["name"] in sort_order else len(sort_order))
   
   return jsonify(result), 200
