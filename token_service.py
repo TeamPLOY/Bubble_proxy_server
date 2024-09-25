@@ -6,11 +6,13 @@ import datetime
 import email.utils
 import urllib.parse
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
+OAUTH_SECRET_KEY = os.getenv("OAUTH_SECRET_KEY")
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 OAUTHURI = os.getenv("OAUTHURI")
 CLIENT_ID = os.getenv("CLIENT_ID")
-OAUTH_SECRET_KEY = os.getenv("OAUTH_SECRET_KEY")
 
 def get_signature(message: str, key: str):
   """OAuth 서명 생성"""
@@ -28,7 +30,7 @@ def get_signature(message: str, key: str):
 def get_access_token():
   """Access Token 발급"""
 
-  tokenUrl = OAUTHURI + '/oauth/1.0/oauth2/token'
+  tokenUrl = 'https://kr.lgeapi.com' + '/oauth/1.0/oauth2/token'
   data = {
     'grant_type': 'refresh_token',
     'refresh_token': REFRESH_TOKEN
