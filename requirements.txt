@@ -1,5 +1,4 @@
 python-dotenv~=1.0.1gunicorn
 gunicorn
 Flask
-Flask
 requests

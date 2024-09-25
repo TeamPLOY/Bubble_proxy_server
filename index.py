@@ -171,3 +171,7 @@ def get_data_by_room(room_id: str):
   result.sort(key=lambda x: sort_order.index(x["name"]) if x["name"] in sort_order else len(sort_order))
   
   return jsonify(result), 200
+
+@app.route('/', method=['GET'])
+def hello():
+  return 'Welcome PLOY proxy server'
